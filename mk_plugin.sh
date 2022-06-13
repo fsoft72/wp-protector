@@ -10,7 +10,7 @@ dest=$1
 
 cd ..
 zip $dest/os3-protector.zip \
-	wp-protector/os3-protector.php \
-	wp-protector/README.md \
-	wp-protector/CHANGELOG.md \
-	wp-protector/readme.txt
+	os3-protector/os3-protector.php \
+	os3-protector/README.md \
+	os3-protector/CHANGELOG.md \
+	os3-protector/readme.txt

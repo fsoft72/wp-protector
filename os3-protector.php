@@ -14,7 +14,7 @@ add_action('wp_head', 'os3_protector_header');
 
 function os3_protector_header()
 {
-	echo '<!-- WP Protector -->';
+	echo '<!-- OS3 Protector -->';
 }
 
 register_activation_hook(__FILE__, 'os3_protector_options');
@@ -75,19 +75,26 @@ function change_dirs_permissions($dirs, $permission)
 	}
 }
 
-function section_lock($lock, $base_dir)
+function section_lock($title, $lock, $base_dir)
 {
 	// echo "<pre>LOCK: $base_dir - $lock</pre>";
-	if ($lock == '1')
+	if ($lock == '1') {
 		$mode = 0555;
-	else
+		$status = 'locked';
+		$bg = '#ccaaaa';
+	} else {
 		$mode = 0755;
+		$status = 'unlocked';
+		$bg = '#aaccaa';
+	}
 
 	$dirs = recurse_get_all_dirs($base_dir);
 	// dump dirs in JSON format
 	// echo json_encode($dirs);
 
 	change_dirs_permissions($dirs, $mode);
+
+	echo "<p style=\"padding: 8px; background-color: $bg;\"><b>$title</b>: $status</p>";
 }
 
 function os3_protector_settings_page()
@@ -106,9 +113,9 @@ function os3_protector_settings_page()
 		update_option('os3_protector_plugins', $plugins);
 		update_option('os3_protector_uploads', $uploads);
 
-		section_lock($themes, WP_CONTENT_DIR . '/themes/');
-		section_lock($plugins, WP_CONTENT_DIR . '/plugins/');
-		section_lock($uploads, WP_CONTENT_DIR . '/uploads/');
+		section_lock("Themes", $themes, WP_CONTENT_DIR . '/themes/');
+		section_lock("Plugins", $plugins, WP_CONTENT_DIR . '/plugins/');
+		section_lock("Uploads", $uploads, WP_CONTENT_DIR . '/uploads/');
 	}
 
 ?>
