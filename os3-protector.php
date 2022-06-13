@@ -1,49 +1,49 @@
 <?php
 
 /*
-Plugin Name: WP Protector
+Plugin Name: OS3 Website Protector
 Plugin URI:
 Description: Protects some important directories from virus and malware.
-Version: 0.1
+Version: 0.2
 Author: Fabio Rotondo
 Author URI: https://fsoft.dev
 License: GPLv2
 */
 
-add_action('wp_head', 'wp_protector_header');
+add_action('wp_head', 'os3_protector_header');
 
-function wp_protector_header()
+function os3_protector_header()
 {
 	echo '<!-- WP Protector -->';
 }
 
-register_activation_hook(__FILE__, 'wp_protector_options');
+register_activation_hook(__FILE__, 'os3_protector_options');
 
-function wp_protector_options()
+function os3_protector_options()
 {
-	if (get_option('wp_protector_themes') === false) {
-		add_option('wp_protector_themes', '0');
+	if (get_option('os3_protector_themes') === false) {
+		add_option('os3_protector_themes', '0');
 	}
 
-	if (get_option('wp_protector_plugins') === false) {
-		add_option('wp_protector_plugins', '0');
+	if (get_option('os3_protector_plugins') === false) {
+		add_option('os3_protector_plugins', '0');
 	}
 
-	if (get_option('wp_protector_uploads') === false) {
-		add_option('wp_protector_uploads', '0');
+	if (get_option('os3_protector_uploads') === false) {
+		add_option('os3_protector_uploads', '0');
 	}
 }
 
-add_action('admin_menu', 'wp_protector_settings_menu');
+add_action('admin_menu', 'os3_protector_settings_menu');
 
-function wp_protector_settings_menu()
+function os3_protector_settings_menu()
 {
 	add_options_page(
-		'WP Protector',  // page title
-		'WP Protector',  // menu title
+		'OS3 Protector',  // page title
+		'OS3 Protector',  // menu title
 		'manage_options',  // capability
-		'wp_protector_settings',  // menu slug
-		'wp_protector_settings_page' // function
+		'os3_protector_settings',  // menu slug
+		'os3_protector_settings_page' // function
 	);
 }
 
@@ -90,21 +90,21 @@ function section_lock($lock, $base_dir)
 	change_dirs_permissions($dirs, $mode);
 }
 
-function wp_protector_settings_page()
+function os3_protector_settings_page()
 {
-	$themes = get_option('wp_protector_themes');
-	$plugins = get_option('wp_protector_plugins');
-	$uploads = get_option('wp_protector_uploads');
+	$themes = get_option('os3_protector_themes');
+	$plugins = get_option('os3_protector_plugins');
+	$uploads = get_option('os3_protector_uploads');
 
 	// check if method is POST
 	if ('POST' == $_SERVER['REQUEST_METHOD']) {
-		$themes = $_POST['wp_protector_themes'];
-		$plugins = $_POST['wp_protector_plugins'];
-		$uploads = $_POST['wp_protector_uploads'];
+		$themes = $_POST['os3_protector_themes'];
+		$plugins = $_POST['os3_protector_plugins'];
+		$uploads = $_POST['os3_protector_uploads'];
 
-		update_option('wp_protector_themes', $themes);
-		update_option('wp_protector_plugins', $plugins);
-		update_option('wp_protector_uploads', $uploads);
+		update_option('os3_protector_themes', $themes);
+		update_option('os3_protector_plugins', $plugins);
+		update_option('os3_protector_uploads', $uploads);
 
 		section_lock($themes, WP_CONTENT_DIR . '/themes/');
 		section_lock($plugins, WP_CONTENT_DIR . '/plugins/');
@@ -120,8 +120,8 @@ function wp_protector_settings_page()
 				<tr>
 					<td>
 						<p>
-							<label for="wp_protector_themes">
-								<input type="checkbox" name="wp_protector_themes" id="wp_protector_themes" value="1" <?php if ($themes == '1') {
+							<label for="os3_protector_themes">
+								<input type="checkbox" name="os3_protector_themes" id="os3_protector_themes" value="1" <?php if ($themes == '1') {
 																															echo 'checked';
 																														} ?> />
 								<strong>Themes</strong>
@@ -133,10 +133,10 @@ function wp_protector_settings_page()
 				<tr>
 					<td>
 						<p>
-							<label for="wp_protector_plugins">
-								<input type="checkbox" name="wp_protector_plugins" id="wp_protector_plugins" value="1" <?php if ($plugins == '1') {
-																															echo 'checked';
-																														} ?> />
+							<label for="os3_protector_plugins">
+								<input type="checkbox" name="os3_protector_plugins" id="os3_protector_plugins" value="1" <?php if ($plugins == '1') {
+																																echo 'checked';
+																															} ?> />
 								<strong>Plugins</strong>
 								- If you enable this, you will not be able to add / remove plugins or edit their files.
 							</label>
@@ -146,10 +146,10 @@ function wp_protector_settings_page()
 				<tr>
 					<td>
 						<p>
-							<label for="wp_protector_uploads">
-								<input type="checkbox" name="wp_protector_uploads" id="wp_protector_uploads" value="1" <?php if ($uploads == '1') {
-																															echo 'checked';
-																														} ?> />
+							<label for="os3_protector_uploads">
+								<input type="checkbox" name="os3_protector_uploads" id="os3_protector_uploads" value="1" <?php if ($uploads == '1') {
+																																echo 'checked';
+																															} ?> />
 								<strong>Uploads</strong>
 								- If you enable this, you will not be able to add / remove files from this directory.
 							</label>
