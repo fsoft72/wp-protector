@@ -1,4 +1,4 @@
-# OS3 Protector
+# OS3 WebSite Protector
 
 This is a small plugin that only works on Linux systems.
 

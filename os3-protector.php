@@ -4,18 +4,21 @@
 Plugin Name: OS3 Website Protector
 Plugin URI:
 Description: Protects some important directories from virus and malware.
-Version: 0.2
+Version: 0.3
 Author: Fabio Rotondo
 Author URI: https://fsoft.dev
 License: GPLv2
 */
 
+/*
+// at the moment, we don't need to play with the site headers.
 add_action('wp_head', 'os3_protector_header');
 
 function os3_protector_header()
 {
-	echo '<!-- OS3 Protector -->';
+	echo '<!-- OS3 Website Protector -->';
 }
+*/
 
 register_activation_hook(__FILE__, 'os3_protector_options');
 
@@ -39,15 +42,15 @@ add_action('admin_menu', 'os3_protector_settings_menu');
 function os3_protector_settings_menu()
 {
 	add_options_page(
-		'OS3 Protector',  // page title
-		'OS3 Protector',  // menu title
+		'OS3 Website Protector',  // page title
+		'Website Protector',  // menu title
 		'manage_options',  // capability
 		'os3_protector_settings',  // menu slug
 		'os3_protector_settings_page' // function
 	);
 }
 
-function recurse_get_all_dirs($base_path)
+function _os3_recurse_get_all_dirs($base_path)
 {
 	// echo "<pre> RECURSE: $base_path</pre>";
 
@@ -57,7 +60,7 @@ function recurse_get_all_dirs($base_path)
 	while (false !== ($file = readdir($dir))) {
 		if (is_dir($base_path . $file) && $file != '.' && $file != '..') {
 			$dirs[] = $base_path . $file . '/';
-			$dirs = array_merge($dirs, recurse_get_all_dirs($base_path . $file . '/'));
+			$dirs = array_merge($dirs, _os3_recurse_get_all_dirs($base_path . $file . '/'));
 		}
 	}
 	closedir($dir);
@@ -66,7 +69,7 @@ function recurse_get_all_dirs($base_path)
 	return $dirs;
 }
 
-function change_dirs_permissions($dirs, $permission)
+function _os3_change_dirs_permissions($dirs, $permission)
 {
 	// changes permissions of all directories in $dirs to $permission
 	foreach ($dirs as $dir) {
@@ -75,7 +78,7 @@ function change_dirs_permissions($dirs, $permission)
 	}
 }
 
-function section_lock($title, $lock, $base_dir)
+function _os3_section_lock($title, $lock, $base_dir)
 {
 	// echo "<pre>LOCK: $base_dir - $lock</pre>";
 	if ($lock == '1') {
@@ -88,41 +91,50 @@ function section_lock($title, $lock, $base_dir)
 		$bg = '#aaccaa';
 	}
 
-	$dirs = recurse_get_all_dirs($base_dir);
+	$dirs = _os3_recurse_get_all_dirs($base_dir);
 	// dump dirs in JSON format
 	// echo json_encode($dirs);
 
-	change_dirs_permissions($dirs, $mode);
+	_os3_change_dirs_permissions($dirs, $mode);
 
 	echo "<p style=\"padding: 8px; background-color: $bg;\"><b>$title</b>: $status</p>";
 }
 
 function os3_protector_settings_page()
 {
-	$themes = get_option('os3_protector_themes');
+	$themes  = get_option('os3_protector_themes');
 	$plugins = get_option('os3_protector_plugins');
 	$uploads = get_option('os3_protector_uploads');
 
 	// check if method is POST
 	if ('POST' == $_SERVER['REQUEST_METHOD']) {
-		$themes = $_POST['os3_protector_themes'];
-		$plugins = $_POST['os3_protector_plugins'];
-		$uploads = $_POST['os3_protector_uploads'];
+		// verify nonce
+		if (!wp_verify_nonce($_POST['_wpnonce'])) {
+			die('<p style="background-color: red; padding: 8px; color: white;"><b>SECURITY ERROR</b>: Invalid nonce.</p>');
+		}
+
+		// we only accept '1' or '0'
+		// for anything different than '1' we set it to '0'
+		$themes = $_POST['os3_protector_themes'] == '1' ? '1' : '0';
+		$plugins = $_POST['os3_protector_plugins'] == '1' ? '1' : '0';
+		$uploads = $_POST['os3_protector_uploads'] == '1' ? '1' : '0';
 
 		update_option('os3_protector_themes', $themes);
 		update_option('os3_protector_plugins', $plugins);
 		update_option('os3_protector_uploads', $uploads);
 
-		section_lock("Themes", $themes, WP_CONTENT_DIR . '/themes/');
-		section_lock("Plugins", $plugins, WP_CONTENT_DIR . '/plugins/');
-		section_lock("Uploads", $uploads, WP_CONTENT_DIR . '/uploads/');
+		_os3_section_lock("Themes", $themes, WP_CONTENT_DIR . '/themes/');
+		_os3_section_lock("Plugins", $plugins, WP_CONTENT_DIR . '/plugins/');
+		_os3_section_lock("Uploads", $uploads, WP_CONTENT_DIR . '/uploads/');
 	}
 
 ?>
 	<div class="wrap">
-		<h1>WP Protector</h1>
+		<h1>OS3 Website Protector</h1>
 		This plugin only works on <em>Linux</em> systems.
 		<form method="post" action="">
+			<!-- create a wp nonce hidden field -->
+			<?php wp_nonce_field(); ?>
 			<table class="form-table">
 				<tr>
 					<td>

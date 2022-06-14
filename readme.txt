@@ -10,7 +10,7 @@ Requires at least: 5.0
 
 Tested up to: 6.0
 
-Stable tag: 0.2
+Stable tag: 0.3
 
 License: GPLv2 or later
 
@@ -34,6 +34,10 @@ You can decide which of these directories can be write enabled at any time.
 1. Change settings in Settings / OS3 Protector
 
 == Changelog ==
+
+= 0.3 =
+
+* Add the nonce field
 
 = 0.2 =
 
