@@ -50,7 +50,7 @@ function os3_protector_settings_menu()
 	);
 }
 
-function _os3_recurse_get_all_dirs($base_path)
+function os3int_recurse_get_all_dirs($base_path)
 {
 	// echo "<pre> RECURSE: $base_path</pre>";
 
@@ -60,7 +60,7 @@ function _os3_recurse_get_all_dirs($base_path)
 	while (false !== ($file = readdir($dir))) {
 		if (is_dir($base_path . $file) && $file != '.' && $file != '..') {
 			$dirs[] = $base_path . $file . '/';
-			$dirs = array_merge($dirs, _os3_recurse_get_all_dirs($base_path . $file . '/'));
+			$dirs = array_merge($dirs, os3int_recurse_get_all_dirs($base_path . $file . '/'));
 		}
 	}
 	closedir($dir);
@@ -69,7 +69,7 @@ function _os3_recurse_get_all_dirs($base_path)
 	return $dirs;
 }
 
-function _os3_change_dirs_permissions($dirs, $permission)
+function os3int_change_dirs_permissions($dirs, $permission)
 {
 	// changes permissions of all directories in $dirs to $permission
 	foreach ($dirs as $dir) {
@@ -78,7 +78,7 @@ function _os3_change_dirs_permissions($dirs, $permission)
 	}
 }
 
-function _os3_section_lock($title, $lock, $base_dir)
+function os3int_section_lock($title, $lock, $base_dir)
 {
 	// echo "<pre>LOCK: $base_dir - $lock</pre>";
 	if ($lock == '1') {
@@ -91,11 +91,11 @@ function _os3_section_lock($title, $lock, $base_dir)
 		$bg = '#aaccaa';
 	}
 
-	$dirs = _os3_recurse_get_all_dirs($base_dir);
+	$dirs = os3int_recurse_get_all_dirs($base_dir);
 	// dump dirs in JSON format
 	// echo json_encode($dirs);
 
-	_os3_change_dirs_permissions($dirs, $mode);
+	os3int_change_dirs_permissions($dirs, $mode);
 
 	echo "<p style=\"padding: 8px; background-color: $bg;\"><b>$title</b>: $status</p>";
 }
@@ -123,9 +123,9 @@ function os3_protector_settings_page()
 		update_option('os3_protector_plugins', $plugins);
 		update_option('os3_protector_uploads', $uploads);
 
-		_os3_section_lock("Themes", $themes, WP_CONTENT_DIR . '/themes/');
-		_os3_section_lock("Plugins", $plugins, WP_CONTENT_DIR . '/plugins/');
-		_os3_section_lock("Uploads", $uploads, WP_CONTENT_DIR . '/uploads/');
+		os3int_section_lock("Themes", $themes, WP_CONTENT_DIR . '/themes/');
+		os3int_section_lock("Plugins", $plugins, WP_CONTENT_DIR . '/plugins/');
+		os3int_section_lock("Uploads", $uploads, WP_CONTENT_DIR . '/uploads/');
 	}
 
 ?>
