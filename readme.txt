@@ -1,4 +1,4 @@
-=== OS3 Protector ===
+=== OS3 Website Protector ===
 
 Contributors: fsoft
 
@@ -22,6 +22,7 @@ Protect your WP site from malware and virus
 
 This plugin helps you protect your WP site from malware and virus by changing write permissions on important directories: themes, plugins and uploads.
 You can decide which of these directories can be write enabled at any time.
+This plugin only works on Linux servers.
 
 == Installation ==
 
@@ -31,7 +32,7 @@ You can decide which of these directories can be write enabled at any time.
 
 1. Activate the plugin in the WordPress Admin Panel.
 
-1. Change settings in Settings / OS3 Protector
+1. Change settings in Settings / Website Protector
 
 == Changelog ==
 
@@ -53,4 +54,4 @@ There are currently no FAQs at this time.
 
 == Screenshots ==
 
-1. The OS3 Protector settings page
+1. The OS3 Website Protector settings page
